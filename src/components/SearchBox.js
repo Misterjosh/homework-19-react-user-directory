@@ -6,6 +6,11 @@ function SearchBox({ handleSearchChange }) {
       <div className="searchbox">
         <form className="form-inline">
          {/* this will be the input box for the searchbox */}
+          <input
+          className="form-inline"
+          type="search"
+          placeholder="Search"
+          onChange={(e) => handleSearchChange(e) } />
         </form>
       </div>
     );
