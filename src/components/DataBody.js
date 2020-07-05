@@ -18,11 +18,11 @@ function DataBody({ users }) {
         users.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
-              <td>Image Here<img src={picture} alt={"employee"}/></td>
-              <td>Name Here{name}</td>
-              <td>Phone Number Here{phone}</td>
-              <td>Email Here{email}</td>
-              <td>Birthdate Here{formatDate(dob)}</td>
+              <td data-th="Image"><img src={picture.medium} alt={"employee"}/></td>
+              <td data-th="Name">{name.first} {name.last}</td>
+              <td data-th="Phone">{phone}</td>
+              <td data-th="Email">{email}</td>
+              <td data-th="DOB">{formatDate(dob.date)}</td>
             </tr>
           );
         })
