@@ -4,7 +4,11 @@ import API from "../utils/API";
 import Nav from "./Nav";
 import DataTable from "./DataTable";
 
+// Only component using state. Makes use of DataBody, DataTable, Nav, and SearchBox.
 
+
+// users and filtered users are empty until component did mount completes the API call
+// after that they are filled with data from results
 export default class DataArea extends Component {
   state = {
     users: [{}],
@@ -12,6 +16,7 @@ export default class DataArea extends Component {
     filteredUsers: [{}]
   }
 
+  // headings is passed to DataTable as props to make rows
   headings = [
     { name: "Image", width: "10%" },
     { name: "Name", width: "10%" },
@@ -20,6 +25,8 @@ export default class DataArea extends Component {
     { name: "DOB", width: "10%" }
   ]
 
+  // In DataTable when the heading is clicked the value is assigned here.
+  // state starts it descending. set up to reverse order on every click
   handleSort = heading => {
     if (this.state.order === "descend") {
       this.setState({
@@ -31,6 +38,9 @@ export default class DataArea extends Component {
       })
     }
 
+// compareFnc returns a-b or b-a to sort
+// sort uses that to determine if the filteredUsers array is a-b ascending or b-a descending and sets that to sortedUsers
+// then the state of filteredUsers's state is set to sortedUsers
     const compareFnc = (a, b) => {
       if (this.state.order === "ascend") {
         // account for missing values
@@ -46,10 +56,11 @@ export default class DataArea extends Component {
           return a[heading] - b[heading];
         }
       } else {
-        // else statement to handle if this.state.order === descend
-        if (a[heading] === undefined) {
+        // order only has 2 states so the else statement checks if (this.state.order === "descend") 
+        // account for missing values
+        if (b[heading] === undefined) {
           return 1;
-        } else if (b[heading] === undefined) {
+        } else if (a[heading] === undefined) {
           return -1;
         }
         // numerically
@@ -65,6 +76,10 @@ export default class DataArea extends Component {
     this.setState({ filteredUsers: sortedUsers });
   }
 
+// this is passed to SearchBox as a prop and set to it as onChange
+// everytime the input changes it is called
+// users are filtered using the value of the SearBox input
+// indexOf only returns values found because of !== -1 
   handleSearchChange = event => {
     console.log(event.target.value);
     const filter = event.target.value;
@@ -76,20 +91,23 @@ export default class DataArea extends Component {
     this.setState({ filteredUsers: filteredList });
   }
 
+
+  // sets the state of users and filteredUsers to results upon success of API get call
   componentDidMount() {
     API.getUsers().then(results => {
+      // console.log(results);
       this.setState({users: results.data.results, filteredUsers: results.data.results})
     });
   }
 
+  // renders the DataArea for Main to use
+  // passes handleSearch to Nav as props. passes headings, users,  and handleSort to DataTable as props
   render() {
     return (
       <>
         <Nav handleSearchChange={this.handleSearchChange} />
         <div className="data-area">
-          <DataTable headings={this.headings} users={this.state.filteredUsers} handleSort={this.handleSort}
-           // we will need to pass in props for headings, users, and handlesort here to DataTable
-          />
+          <DataTable headings={this.headings} users={this.state.filteredUsers} handleSort={this.handleSort} />
         </div>
       </>
     );

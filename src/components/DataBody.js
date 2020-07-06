@@ -1,6 +1,11 @@
 import React from "react";
 import "../styles/DataBody.css";
 
+// users is imported from DataArea.js through DataTable.js as props
+// users.map is used to get the values needed to make one row for each user
+// login is used to make a unique id for each user and then each value is inserted into its row as table data
+// the picture, name, and dob all came back with more than just their base values in the user object. example.this
+
 function DataBody({ users }) {
   function formatDate(date) {
     const dateArray = date.split("-");
@@ -18,11 +23,11 @@ function DataBody({ users }) {
         users.map(({ login, name, picture, phone, email, dob }) => {
           return (
             <tr key={login.uuid}>
-              <td data-th="Image"><img src={picture.medium} alt={"employee"}/></td>
-              <td data-th="Name">{name.first} {name.last}</td>
-              <td data-th="Phone">{phone}</td>
-              <td data-th="Email">{email}</td>
-              <td data-th="DOB">{formatDate(dob.date)}</td>
+              <td><img src={picture.large} alt={"employee"}/></td>
+              <td>{name.first} {name.last}</td>
+              <td>{phone}</td>
+              <td>{email}</td>
+              <td>{formatDate(dob.date)}</td>
             </tr>
           );
         })
